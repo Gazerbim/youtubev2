@@ -1,4 +1,4 @@
-YouTube Playlist Downloader and Player Application :
+#YouTube Playlist Downloader and Player Application :
 
 This is a Flask-based web application that allows users to download and play YouTube videos and playlists, as well as music. The app supports video thumbnail downloads, playlist organization, and track view counters.
 
