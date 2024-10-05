@@ -263,7 +263,8 @@ def download_playlist_with_ytdlp(playlist_url, base_output_path='./videos'):
             item_path = os.path.join(playlist_path, item)
             if os.path.isdir(item_path):
                 for file in os.listdir(item_path):
-                    if file.endswith(".jpg") or file.endswith(".webp"):
+                    if file.endswith(".jpg") or file.endswith(".webp") or file.endswith(".png"):
+                        # Renommer la miniature en thumbnail.jpg
                         os.rename(os.path.join(item_path, file), os.path.join(item_path, "thumbnail.jpg"))
                     elif file.endswith(".mp4"):
                         pass
