@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Accueil - Gestionnaire de médias</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f0f5;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #4a90e2;
+            text-align: center;
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        nav {
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            max-width: 400px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        nav ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        nav ul li {
+            margin-bottom: 15px;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: #4a90e2;
+            font-weight: bold;
+            display: block;
+            padding: 10px 20px;
+            border-radius: 4px;
+            background-color: #f9f9f9;
+            border: 2px solid #4a90e2;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        nav a:hover {
+            background-color: #4a90e2;
+            color: white;
+            transform: scale(1.05);
+        }
+
+        .random-link {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            background-color: #fff;
+            color: #888;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Gestionnaire de médias</h1>
+    <nav>
+        <ul>
+            <li><a href="{{ url_for('download') }}">Télécharger des vidéos</a></li>
+            <li><a href="{{ url_for('watch') }}">Visionner des vidéos</a></li>
+            <li><a href="{{ url_for('download_music') }}">Télécharger de la musique</a></li>
+            <li><a href="{{ url_for('listen_music') }}">Écouter de la musique</a></li>
+        </ul>
+    </nav>
+</body>
+</html>

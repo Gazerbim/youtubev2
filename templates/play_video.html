@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lecture de vidéo</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f0f5;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        h1 {
+            color: #4a90e2;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        p {
+            color: #555;
+            text-align: center;
+            font-size: 18px;
+        }
+        video {
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            margin-top: 20px;
+            margin-bottom: 20px;
+            width: 100%;  /* Par défaut, la vidéo occupe 100% de la largeur de son conteneur */
+            max-width: 720px;  /* Limitation à 720px pour éviter que la vidéo soit trop large sur de grands écrans */
+            height: auto;  /* Le ratio d'aspect est conservé */
+        }
+        a {
+            display: inline-block;
+            text-decoration: none;
+            color: white;
+            background-color: #4a90e2;
+            padding: 10px 20px;
+            border-radius: 4px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+        a:hover {
+            background-color: #357ABD;
+        }
+
+        /* Ajustement pour les très petits écrans */
+        @media (max-width: 768px) {
+            video {
+                width: 100%;  /* La vidéo occupe toute la largeur de l'écran */
+                max-width: 100%;  /* Pas de limite maximale, elle s'ajuste à l'écran */
+            }
+            h1, p {
+                font-size: 16px;  /* Réduction de la taille des textes sur petits écrans */
+            }
+        }
+
+    </style>
+</head>
+<body>
+
+    <h1>{{ video }}</h1>
+    <p>Vues : {{ views }}</p>
+
+    <video controls>
+        <source src="{{ url_for('serve_video', filename=video + '/' + video_file) }}" type="video/mp4">
+        Votre navigateur ne supporte pas la lecture de vidéos.
+    </video>
+
+    <a href="{{ url_for('watch') }}">Retour à la liste des vidéos</a>
+
+</body>
+</html>

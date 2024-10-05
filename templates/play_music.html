@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Écouter {{ music }}</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f0f5;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+        h1 {
+            color: #4a90e2;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 2em;
+        }
+        audio {
+            width: 100%;
+            max-width: 500px;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        p {
+            font-size: 18px;
+            color: #555;
+            margin-bottom: 20px;
+        }
+        a {
+            text-decoration: none;
+            color: white;
+            background-color: #4a90e2;
+            padding: 10px 20px;
+            border-radius: 4px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+        a:hover {
+            background-color: #357ABD;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Écouter {{ music }}</h1>
+
+    <audio controls>
+        <source src="{{ url_for('serve_music', filename=mp3_file) }}" type="audio/mpeg">
+        Votre navigateur ne supporte pas la lecture audio.
+    </audio>
+
+    <p>Nombre de vues : {{ views }}</p>
+
+    <a href="{{ url_for('listen_music') }}">Retour à la liste des musiques</a>
+
+</body>
+</html>

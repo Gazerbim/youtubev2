@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ playlist }} - Playlist Vidéo</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            background-color: #f8f9fa;
+        }
+        h1, h2 {
+            color: #333;
+            text-align: center;
+        }
+        .player-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .current-video {
+            width: 100%;
+        }
+        .playlist {
+            width: 100%;
+            overflow-y: auto;
+            max-height: 400px;
+            margin-top: 20px;
+        }
+        .video-item {
+            display: flex;
+            align-items: center;
+            border: 1px solid #ddd;
+            margin-bottom: 10px;
+            padding: 10px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.2s;
+        }
+        .video-item:hover {
+            background-color: #f0f0f0;
+        }
+        .video-item img {
+            width: 50px;
+            height: 50px;
+            margin-right: 10px;
+            border-radius: 5px;
+        }
+        video {
+            width: 100%;
+            max-height: 300px;
+            border-radius: 5px;
+            background-color: #000;
+        }
+        .download-button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+            text-align: center;
+            border-radius: 5px;
+        }
+        .download-button:hover {
+            background-color: #0056b3;
+        }
+        /* Responsive styles */
+        @media (min-width: 768px) {
+            .player-container {
+                flex-direction: row;
+            }
+            .current-video {
+                flex: 2;
+            }
+            .playlist {
+                flex: 1;
+                max-height: 600px;
+            }
+        }
+        @media (max-width: 767px) {
+            .playlist {
+                max-height: 300px;
+            }
+            .video-item h3 {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Playlist : {{ playlist }}</h1>
+    
+    <!-- Bouton pour télécharger toute la playlist -->
+    <!--<button class="download-button" onclick="downloadPlaylist()">Télécharger toute la playlist</button>-->
+    
+    <div class="player-container">
+        <div class="current-video">
+            <h2>En cours de lecture</h2>
+            <h3 id="current-title"></h3>
+            <video id="video-player" controls>
+                Votre navigateur ne supporte pas la lecture vidéo.
+            </video>
+        </div>
+        
+        <div class="playlist">
+            <h2>Liste des vidéos</h2>
+            {% for video in videos %}
+            <div class="video-item" data-src="{{ url_for('serve_video', filename=playlist + '/' + video['name'] + '/' + video['file']) }}">
+                <img src="{{ video['thumbnail'] }}" alt="{{ video['name'] }}">
+                <div>
+                    <h3>{{ video['name'] }}</h3>
+                    <p>{{ video['views'] }} vues</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <p><a href="{{ url_for('watch') }}">Retour à la liste des vidéos</a></p>
+
+    <script>
+        const videoPlayer = document.getElementById('video-player');
+        const currentTitle = document.getElementById('current-title');
+        const videoItems = document.querySelectorAll('.video-item');
+        let currentVideo = 0;
+
+        function playVideo(index) {
+            if (index >= 0 && index < videoItems.length) {
+                const track = videoItems[index];
+                videoPlayer.src = track.dataset.src;
+                currentTitle.textContent = track.querySelector('h3').textContent;
+                videoPlayer.play();
+                currentVideo = index;
+            }
+        }
+
+        videoItems.forEach((item, index) => {
+            item.addEventListener('click', () => {
+                playVideo(index);
+            });
+        });
+
+        videoPlayer.addEventListener('ended', () => {
+            // Vérifie s'il reste des vidéos à lire
+            if (currentVideo + 1 < videoItems.length) {
+                playVideo(currentVideo + 1);
+            } else {
+                console.log("Fin de la playlist");
+            }
+        });
+
+        // Jouer la première vidéo au chargement de la page
+        if (videoItems.length > 0) {
+            playVideo(0);
+        }
+    </script>
+</body>
+</html>

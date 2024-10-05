@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Téléchargement de la playlist {{ playlist }}</title>
+	<button class="download-button" onclick="downloadPlaylist()">Revenir à la playliste</button>
+    <script>
+        function downloadAll(musicFiles) {
+            if (confirm("Voulez-vous vraiment télécharger toutes les musiques de la playlist ?")) {
+                musicFiles.forEach(function(file) {
+                    const link = document.createElement('a');
+                    link.href = '/download_file/' + encodeURIComponent(file);  // Utilisation de encodeURIComponent pour gérer les espaces et caractères spéciaux
+                    link.download = '';  // Force le téléchargement
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                });
+            }
+        }
+		// Fonction pour télécharger toute la playlist
+        function downloadPlaylist() {
+            window.location.href = "{{ url_for('play_music_playlist', playlist=playlist) }}";
+        }
+
+        window.onload = function() {
+            const musicFiles = {{ music_files|tojson }};
+            downloadAll(musicFiles);
+        };
+    </script>
+</head>
+<body>
+    <h1>Téléchargement de la playlist {{ playlist }}</h1>
+    <p>Le téléchargement de toutes les musiques va commencer...</p>
+</body>
+</html>
