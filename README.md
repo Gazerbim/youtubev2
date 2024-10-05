@@ -1,9 +1,12 @@
 YouTube Playlist Downloader and Player Application
+
 This is a Flask-based web application that allows users to download and play YouTube videos and playlists, as well as music. The app supports video thumbnail downloads, playlist organization, and track view counters.
 
 /!\ Note that this is a non-serious application, made for me and for people that would like to use it ! This has and will have a lot of bugs and isn't perfect ! /!\
 
-Features
+
+Features:
+
 Download YouTube Playlists (Video/Audio): Download entire YouTube playlists with options to store each video/music in separate folders.
 Thumbnail Handling: Automatically download and rename video thumbnails to thumbnail.jpg.
 Playlist and Music Views: Track the number of views for each video/music and display it on the user interface.
@@ -13,13 +16,16 @@ Music-Specific Functionality: Separate routes and logic for downloading and list
 Flask Integration: Easily configurable and customizable routes for serving music, videos, and playlists.
 
 Installation : 
+
 Open a cmd prompt in the project location, and type in "pip install requirements.txt" to install the librairies (install python first)
 Run the program by putting "python index.py" on the same cmd.
 
 Access the application by navigating to http://127.0.0.1:17000 in your browser.
 
 
-Usage
+Usage:
+
+
 Downloading Playlists
 Enter the playlist URL on the home page.
 The app will download the videos/music to their respective folders (videos or music) and create subfolders for each entry.
@@ -33,14 +39,20 @@ Navigate to the "Listen to Music" section.
 Browse through the available music playlists.
 Click on a song to play it in the browse.
 
-Directory Structure
+
+Directory Structure:
+
 .
 ├── index.py                # Main application logic
 ├── templates/              # HTML templates
 ├── videos/                 # Directory for downloaded videos
 ├── music/                  # Directory for downloaded music
 └── requirements.txt        # Python dependencies
-Routes
+
+
+Routes:
+
+
 /: Home page with options to download or view content.
 /download_playlist: Route to handle downloading YouTube playlists.
 /watch: Browse and watch videos.
@@ -56,7 +68,8 @@ Database: Simple file-based system (views tracked via views.txt files)
 Contribution
 Feel free to fork this repository, submit issues, or make pull requests to contribute to this project.
 
-Contact
+
+Contact:
 For further information or inquiries, please contact:
 
 Email: gazerbim@gmail.com
