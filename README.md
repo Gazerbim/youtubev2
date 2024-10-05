@@ -49,7 +49,7 @@ Click on a song to play it in the browse.
 
 ├── videos/                 # Directory for downloaded videos
 
-├── music/                  # Directory for downloaded music
+├── musique/                  # Directory for downloaded music
 
 └── requirements.txt        # Python dependencies
 
