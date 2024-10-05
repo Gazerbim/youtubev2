@@ -2,7 +2,7 @@
 
 This is a Flask-based web application that allows users to download and play YouTube videos and playlists, as well as music. The app supports video thumbnail downloads, playlist organization, and track view counters.
 
-/!\ Note that this is a non-serious application, made for me and for people that would like to use it ! This has and will have a lot of bugs and isn't perfect ! /!\
+/!\ Note that this is a non-serious application, made for me and for people that would like to use it ! This has and will have a lot of bugs and isn't perfect ! /!\ This is also a mix of french and english.
 
 
 # Features:
