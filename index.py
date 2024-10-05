@@ -32,7 +32,7 @@ def download_audio_with_ytdlp(url, output_path='./musique'):
         if not os.path.exists(output_path):
             os.makedirs(output_path)
 
-        # Récupérer les informations sur la vidéo
+        # Récupérer les informations sur la vidéo avec les commandes direct
         info_command = [
             "yt-dlp",
             "--dump-json",
@@ -49,7 +49,7 @@ def download_audio_with_ytdlp(url, output_path='./musique'):
         if not os.path.exists(audio_folder):
             os.makedirs(audio_folder)
 
-        # Télécharger l'audio
+        # Télécharger l'audio avec la commande prompt
         audio_command = [
             "yt-dlp",
             "--verbose",
@@ -70,7 +70,7 @@ def download_audio_with_ytdlp(url, output_path='./musique'):
         ]
         subprocess.run(thumbnail_command, check=True)
 
-        # Renommer la miniature en .jpg
+        # Renommer la miniature en thumbnail.jpg
         for file in os.listdir(audio_folder):
             if file.startswith("thumbnail"):
                 thumbnail_ext = os.path.splitext(file)[1]
@@ -93,7 +93,7 @@ def download_audio_with_ytdlp(url, output_path='./musique'):
 def download_music_playlist_with_ytdlp(playlist_url, base_output_path='./musique'):
     print("Téléchargement de la playlist de musique lancé")
     try:
-        # Récupérer les infos de la playlist
+        # Récupérer les infos de la playlist toujours avec les commandes
         info_command = [
             "yt-dlp",
             "--flat-playlist",
@@ -111,7 +111,7 @@ def download_music_playlist_with_ytdlp(playlist_url, base_output_path='./musique
         if not os.path.exists(playlist_path):
             os.makedirs(playlist_path)
 
-        # Commande pour télécharger les musiques en mp3 avec leur miniature
+        # Commande pour télécharger les musiques en mp3 avec leurs miniatures
         download_command = [
             "yt-dlp",
             "--verbose",
@@ -125,7 +125,7 @@ def download_music_playlist_with_ytdlp(playlist_url, base_output_path='./musique
 
         subprocess.run(download_command, check=True)
 
-        # Organiser les fichiers et créer views.txt pour chaque musique
+        # Organiser les fichiers et créer views.txt pour chaque musique (meme si inutile il faudrait l'enlever)
         for item in os.listdir(playlist_path):
             item_path = os.path.join(playlist_path, item)
             if os.path.isdir(item_path):
@@ -171,7 +171,7 @@ def download_video_with_ytdlp(url, output_path='.'):
         if not os.path.exists(video_folder):
             os.makedirs(video_folder)
 
-        # Download video
+        # télécharger video
         video_command = [
             "yt-dlp",
             "--verbose",
@@ -182,7 +182,7 @@ def download_video_with_ytdlp(url, output_path='.'):
         ]
         subprocess.run(video_command, check=True)
 
-        # Download thumbnail
+        # télécharger miniature
         thumbnail_command = [
             "yt-dlp",
             "--write-thumbnail",
@@ -224,7 +224,6 @@ def download_playlist_with_ytdlp(playlist_url, base_output_path='./videos'):
         result = subprocess.run(info_command, capture_output=True, text=True, check=True)
         playlist_info = result.stdout.splitlines()
 
-        # Calculer la taille de la playlist
         playlist_size = len(playlist_info)
 
         playlist_data = json.loads(playlist_info[0])
