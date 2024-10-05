@@ -44,9 +44,13 @@ Click on a song to play it in the browse.
 
 .
 ├── index.py                # Main application logic
+
 ├── templates/              # HTML templates
+
 ├── videos/                 # Directory for downloaded videos
+
 ├── music/                  # Directory for downloaded music
+
 └── requirements.txt        # Python dependencies
 
 
