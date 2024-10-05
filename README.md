@@ -1,11 +1,11 @@
-#YouTube Playlist Downloader and Player Application :
+# YouTube Playlist Downloader and Player Application :
 
 This is a Flask-based web application that allows users to download and play YouTube videos and playlists, as well as music. The app supports video thumbnail downloads, playlist organization, and track view counters.
 
 /!\ Note that this is a non-serious application, made for me and for people that would like to use it ! This has and will have a lot of bugs and isn't perfect ! /!\
 
 
-Features:
+# Features:
 
 Download YouTube Playlists (Video/Audio): Download entire YouTube playlists with options to store each video/music in separate folders.
 Thumbnail Handling: Automatically download and rename video thumbnails to thumbnail.jpg.
@@ -15,7 +15,7 @@ Responsive UI: Adapted to different devices, including desktops and mobile phone
 Music-Specific Functionality: Separate routes and logic for downloading and listening to music playlists, stored in a dedicated music folder.
 Flask Integration: Easily configurable and customizable routes for serving music, videos, and playlists.
 
-Installation : 
+# Installation : 
 
 Open a cmd prompt in the project location, and type in "pip install requirements.txt" to install the librairies (install python first)
 Run the program by putting "python index.py" on the same cmd.
@@ -23,7 +23,7 @@ Run the program by putting "python index.py" on the same cmd.
 Access the application by navigating to http://127.0.0.1:17000 in your browser.
 
 
-Usage:
+# Usage:
 
 
 Downloading Playlists
@@ -40,7 +40,7 @@ Browse through the available music playlists.
 Click on a song to play it in the browse.
 
 
-Directory Structure:
+# Directory Structure:
 
 .
 ├── index.py                # Main application logic
@@ -50,7 +50,7 @@ Directory Structure:
 └── requirements.txt        # Python dependencies
 
 
-Routes:
+# Routes:
 
 
 /: Home page with options to download or view content.
@@ -65,11 +65,13 @@ Technologies
 Backend: Flask, yt-dlp, FFmpeg
 Frontend: HTML, CSS, JavaScript
 Database: Simple file-based system (views tracked via views.txt files)
-Contribution
+
+# Contribution
 Feel free to fork this repository, submit issues, or make pull requests to contribute to this project.
 
 
-Contact:
+# Contact:
 For further information or inquiries, please contact:
-
 Email: gazerbim@gmail.com
+
+Demo video (in french) at https://www.youtube.com/watch?v=Gn_FvaHofW8
