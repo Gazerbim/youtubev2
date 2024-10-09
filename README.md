@@ -78,4 +78,4 @@ Feel free to fork this repository, submit issues, or make pull requests to contr
 For further information or inquiries, please contact:
 Email: gazerbim@gmail.com
 
-Demo video (in french) at https://www.youtube.com/watch?v=Gn_FvaHofW8
+
