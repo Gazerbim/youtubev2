@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, send_from_directory, redirect, url_for, abort, flash
+from flask import Flask, render_template, request, send_from_directory, redirect, send_file, url_for, abort, flash
 import os
 import random
 from werkzeug.utils import secure_filename
@@ -654,12 +654,6 @@ def download_file(filename):
 
     # Envoyer le fichier au client
     return send_file(safe_path, as_attachment=True)
-
-    try:
-        return send_from_directory(directory, file_name, as_attachment=True)
-    except Exception as e:
-        print(f"Erreur lors de l'envoi du fichier: {str(e)}")  # Log pour le débogage
-        abort(500, description="Erreur lors du téléchargement du fichier audio")
 
 
 def get_playlist_thumbnail(playlist_name):
