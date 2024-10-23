@@ -151,12 +151,12 @@ def download_music_playlist_with_ytdlp(playlist_url, base_output_path='./musique
 
 
 def download_video_with_ytdlp(url, output_path='.'):
-    print("Telechargement de la vidéo lancé")
+    print("Téléchargement de la vidéo lancé")
     try:
         if not os.path.exists(output_path):
             os.makedirs(output_path)
 
-        # Get video info
+        # Récupérer les informations sur la vidéo
         info_command = [
             "yt-dlp",
             "--dump-json",
@@ -167,11 +167,14 @@ def download_video_with_ytdlp(url, output_path='.'):
 
         video_title = sanitize_filename(video_info['title'])
         video_folder = os.path.join(output_path, video_title)
+        video_file_path = os.path.join(video_folder, f"{video_title}.mp4")
 
-        if not os.path.exists(video_folder):
-            os.makedirs(video_folder)
+        # Vérifier si la vidéo existe déjà
+        if os.path.exists(video_file_path):
+            print(f"Vidéo {video_title} déjà présente, téléchargement évité.")
+            return
 
-        # télécharger video
+        # Télécharger la vidéo
         video_command = [
             "yt-dlp",
             "--verbose",
@@ -182,7 +185,7 @@ def download_video_with_ytdlp(url, output_path='.'):
         ]
         subprocess.run(video_command, check=True)
 
-        # télécharger miniature
+        # Télécharger la miniature
         thumbnail_command = [
             "yt-dlp",
             "--write-thumbnail",
@@ -192,14 +195,14 @@ def download_video_with_ytdlp(url, output_path='.'):
         ]
         subprocess.run(thumbnail_command, check=True)
 
-        # Rename thumbnail to .jpg
+        # Renommer la miniature en thumbnail.jpg
         for file in os.listdir(video_folder):
             if file.startswith("thumbnail"):
                 thumbnail_ext = os.path.splitext(file)[1]
                 os.rename(os.path.join(video_folder, file), os.path.join(video_folder, "thumbnail.jpg"))
                 break
 
-        # Create views file
+        # Créer un fichier de vues
         with open(os.path.join(video_folder, "views.txt"), "w") as f:
             f.write("0")
 
@@ -209,6 +212,7 @@ def download_video_with_ytdlp(url, output_path='.'):
         print(f"Erreur lors de l'exécution de yt-dlp : {e}")
     except Exception as e:
         print(f"Erreur générale : {e}")
+
 
 
 def download_playlist_with_ytdlp(playlist_url, base_output_path='./videos'):
@@ -234,28 +238,39 @@ def download_playlist_with_ytdlp(playlist_url, base_output_path='./videos'):
         if not os.path.exists(playlist_path):
             os.makedirs(playlist_path)
 
-        # Modifier la commande de téléchargement
-        download_command = [
-            "yt-dlp",
-            "--verbose",
-            "--playlist-reverse",
-            "-f", "bestvideo[height<=720]+bestaudio/best[height<=720]",
-            "--merge-output-format", "mp4",
-            "--write-thumbnail",
-            playlist_url,
-            "-o", os.path.join(playlist_path, f'%(playlist_index)s-%(title)s/%(title)s.%(ext)s')
-        ]
+        # Parcourir les vidéos de la playlist
+        for i, video_info in enumerate(playlist_info):
+            video_data = json.loads(video_info)
+            video_title = sanitize_filename(video_data['title'])
+            video_folder = os.path.join(playlist_path, f"{i+1:03d}-{video_title}")
+            video_file_path = os.path.join(video_folder, f"{video_title}.mp4")
+            print(f"\n {video_file_path}\n")
 
-        subprocess.run(download_command, check=True)
+            # Si la vidéo existe déjà, on passe à la suivante
+            if os.path.exists(video_file_path):
+                print(f"Vidéo {video_title} déjà présente, passage à la suivante.")
+                continue
+
+            # Télécharger la vidéo
+            download_command = [
+                "yt-dlp",
+                "--verbose",
+                "-f", "bestvideo[height<=720]+bestaudio/best[height<=720]",
+                "--merge-output-format", "mp4",
+                "--write-thumbnail",
+                f"https://www.youtube.com/watch?v={video_data['id']}",
+                "-o", os.path.join(video_folder, '%(title)s.%(ext)s')
+            ]
+            subprocess.run(download_command, check=True)
 
         # Renommer les dossiers après le téléchargement
-        for item in os.listdir(playlist_path):
+        """for item in os.listdir(playlist_path):
             item_path = os.path.join(playlist_path, item)
             if os.path.isdir(item_path):
                 old_index = int(item.split('-')[0])
                 new_index = playlist_size - old_index + 1
                 new_name = f"{new_index:03d}-{'-'.join(item.split('-')[1:])}"
-                os.rename(item_path, os.path.join(playlist_path, new_name))
+                os.rename(item_path, os.path.join(playlist_path, new_name))"""
 
         # Organiser les fichiers et créer views.txt pour chaque vidéo
         for item in os.listdir(playlist_path):
@@ -279,6 +294,7 @@ def download_playlist_with_ytdlp(playlist_url, base_output_path='./videos'):
         print(f"Erreur lors de l'exécution de yt-dlp : {e}")
     except Exception as e:
         print(f"Erreur générale : {e}")
+
 
 def sanitize_filename(filename):
     # Implémentez cette fonction pour nettoyer les noms de fichiers si nécessaire
