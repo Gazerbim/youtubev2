@@ -637,8 +637,11 @@ def download_music_playlist_all(playlist):
                 thumbnail_path = os.path.join(root, 'thumbnail.jpg')
 
                 # Renommer le fichier s'il n'est pas déjà nommé "thumbnail.jpg"
-                if not file.lower() == 'thumbnail.jpg':
+                # Check if the file 'thumbnail.jpg' already exists
+                if not os.path.exists(thumbnail_path):
                     os.rename(full_image_path, thumbnail_path)
+                else:
+                    print(f"Thumbnail already exists at {thumbnail_path}, skipping renaming.")
 
     if not music_files:
         flash(f"Aucun fichier MP3 trouvé dans la playlist '{playlist}'.", "error")
