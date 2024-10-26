@@ -168,7 +168,9 @@
 
         // Fonction pour télécharger toute la playlist
         function downloadPlaylist() {
+			alert("Le téléchargement a commencé ! Veuillez RESTER SUR LA PAGE sinon vous ne l'aurez pas !");
             window.location.href = "{{ url_for('download_music_playlist_all', playlist=playlist) }}";
+			
         }
     </script>
 </body>

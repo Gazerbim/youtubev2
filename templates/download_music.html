@@ -76,10 +76,15 @@
             text-decoration: underline;
         }
     </style>
+    <script>
+        function showDownloadAlert() {
+            alert("Le téléchargement est en cours. Il va se faire petit à petit.");
+        }
+    </script>
 </head>
 <body>
     <h1>Télécharger une musique ou une playlist</h1>
-    <form method="post" action="{{ url_for('download_music') }}">
+    <form method="post" action="{{ url_for('download_music') }}" onsubmit="showDownloadAlert()">
         <label for="url">URL de la musique ou de la playlist :</label>
         <input type="text" id="url" name="url" required>
         <button type="submit">Télécharger</button>

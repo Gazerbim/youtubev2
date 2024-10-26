@@ -12,6 +12,8 @@ from werkzeug.utils import safe_join
 from urllib.parse import unquote
 import random
 import urllib.parse
+import zipfile
+import io
 
 executor = concurrent.futures.ThreadPoolExecutor(max_workers=4)
 
@@ -616,42 +618,33 @@ def download_music_playlist_all(playlist):
     base_music_path = './musique'
     playlist_path = os.path.join(base_music_path, playlist)
 
+    # Vérification de l'existence de la playlist
     if not os.path.exists(playlist_path):
         flash(f"La playlist '{playlist}' n'existe pas.", "error")
         return redirect(url_for('listen_music'))
 
-    # Récupérer tous les fichiers MP3 et miniatures dans le dossier de la playlist
-    music_files = []
-    for root, dirs, files in os.walk(playlist_path):
-        for file in files:
-            if file.endswith('.mp3'):
-                relative_path = os.path.relpath(os.path.join(root, file), base_music_path)
-                music_files.append(relative_path)
+    # Créer une archive ZIP en mémoire pour inclure tous les fichiers MP3
+    zip_buffer = io.BytesIO()
+    with zipfile.ZipFile(zip_buffer, "w", zipfile.ZIP_DEFLATED) as zip_file:
+        # Parcourir les fichiers et sous-dossiers de la playlist
+        for root, dirs, files in os.walk(playlist_path):
+            for file in files:
+                # Inclure uniquement les fichiers MP3
+                if file.endswith('.mp3'):
+                    full_path = os.path.join(root, file)
+                    zip_file.write(full_path, file)  # Ajout sans structure de dossier
+                    print(f"Ajouté au ZIP : {file}")
 
-            # Vérifier si c'est une miniature et renommer si nécessaire
-            elif file.lower().endswith(('.jpg', '.jpeg', '.png')):  # Extension typique d'image
-                # Construire le chemin complet du fichier
-                full_image_path = os.path.join(root, file)
+    # Repositionner le pointeur du buffer pour lecture
+    zip_buffer.seek(0)
 
-                # Chemin de destination pour la renommer en "thumbnail.jpg"
-                thumbnail_path = os.path.join(root, 'thumbnail.jpg')
-
-                # Renommer le fichier s'il n'est pas déjà nommé "thumbnail.jpg"
-                # Check if the file 'thumbnail.jpg' already exists
-                if not os.path.exists(thumbnail_path):
-                    os.rename(full_image_path, thumbnail_path)
-                else:
-                    print(f"Thumbnail already exists at {thumbnail_path}, skipping renaming.")
-
-    if not music_files:
-        flash(f"Aucun fichier MP3 trouvé dans la playlist '{playlist}'.", "error")
-        return redirect(url_for('listen_music'))
-
-    return render_template('download_music_playlist_all.html', playlist=playlist, music_files=music_files)
+    # Envoyer le fichier ZIP pour téléchargement
+    return send_file(zip_buffer, as_attachment=True, download_name=f"{playlist}.zip", mimetype='application/zip')
 
 
 @app.route('/download_file/<path:filename>')
 def download_file(filename):
+    print(f"Download file {filename}")
     # Décoder l'URL
     filename = unquote(filename)
 
@@ -670,6 +663,7 @@ def download_file(filename):
     if not os.path.isfile(safe_path):
         print(f"Fichier non trouvé: {safe_path}")
         abort(404, description="Fichier audio non trouvé")
+
 
     # Envoyer le fichier au client
     return send_file(safe_path, as_attachment=True)
