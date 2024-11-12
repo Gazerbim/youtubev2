@@ -117,6 +117,31 @@
 		.menu-button:hover {
             background-color: #357ABD;
         }
+		/* Styles pour le formulaire et le bouton de suppression */
+		.delete-form {
+			position: absolute;
+			top: 10px;
+			right: 10px;
+		}
+
+		.delete-button {
+			background: none;
+			border: none;
+			font-size: 20px;
+			cursor: pointer;
+			color: #ff4d4d; /* Rouge par défaut */
+			transition: color 0.2s ease;
+		}
+
+		.delete-button:hover {
+			color: #e60000; /* Rouge intense au survol */
+		}
+
+		/* Position relative pour les éléments vidéo et musique */
+		.video-item, .music-item {
+			position: relative;
+		}
+
 
         /* Adaptation pour les petits écrans */
         @media (max-width: 768px) {
@@ -162,13 +187,18 @@
     <h2>Vidéos</h2>
     <div class="video-list">
         {% for video in videos %}
-            <div class="video-item">
-                <a href="{{ url_for('play_video', video=video.name) }}">
-                    <img class="thumbnail" src="{{ url_for('serve_thumbnail', filename=video.name + '/thumbnail.jpg') }}" alt="{{ video.name }}">
-                    <p>{{ video.name }}</p>
-                    <p>Vues : {{ video.views }}</p>
-                </a>
-            </div>
+        <div class="video-item">
+			<form action="{{ url_for('delete_media', media_type='video', name=video.name) }}" method="post" class="delete-form">
+				<button type="submit" class="delete-button" title="Supprimer">
+					🗑️
+				</button>
+			</form>
+			<a href="{{ url_for('play_video', video=video.name) }}">
+				<img class="thumbnail" src="{{ url_for('serve_thumbnail', filename=video.name + '/thumbnail.jpg') }}" alt="{{ video.name }}">
+				<p>{{ video.name }}</p>
+				<p>Vues : {{ video.views }}</p>
+			</a>
+		</div>
         {% endfor %}
     </div>
 
@@ -176,6 +206,11 @@
     <div class="playlist-list">
         {% for playlist in playlists %}
             <div class="playlist-item">
+				<form action="{{ url_for('delete_media', media_type='video', name=playlist.name) }}" method="post" class="delete-form">
+					<button type="submit" class="delete-button" title="Supprimer">
+						🗑️
+					</button>
+				</form>
                 <a href="{{ url_for('play_playlist', playlist=playlist.name) }}">
                     <img class="thumbnail" src="{{ url_for('serve_thumbnail', filename=playlist.name + '/' + playlist.first_video + '/thumbnail.jpg') }}" alt="{{ playlist.name }}">
                     <p>{{ playlist.name }}</p>

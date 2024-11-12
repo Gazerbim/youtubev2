@@ -23,7 +23,7 @@ VIDEOS_FOLDER = './videos'
 app.config['VIDEOS_FOLDER'] = VIDEOS_FOLDER
 MUSIC_FOLDER = './musique'
 app.config['MUSIC_FOLDER'] = MUSIC_FOLDER
-
+app.secret_key = 'votre_clé_secrète_unique'
 
 def sanitize_filename(filename):
     return re.sub(r'[\\/*?:"<>|]', "", filename)
@@ -682,6 +682,22 @@ def get_playlist_thumbnail(playlist_name):
 
     # Retourne None si aucune miniature n'est trouvée
     return None
+
+@app.route('/delete/<media_type>/<path:name>', methods=['POST'])
+def delete_media(media_type, name):
+    # Détermine le dossier en fonction du type de média
+    folder = app.config['VIDEOS_FOLDER'] if media_type == 'video' else app.config['MUSIC_FOLDER']
+    media_path = os.path.join(folder, name)
+
+    # Supprime le dossier si il existe
+    if os.path.exists(media_path):
+        shutil.rmtree(media_path)
+        flash(f"{name} supprimé avec succès.", "success")
+    else:
+        flash(f"{name} introuvable.", "error")
+
+    # Redirige vers la page appropriée
+    return redirect(url_for('watch') if media_type == 'video' else url_for('listen_music'))
 
 
 if __name__ == '__main__':

@@ -124,6 +124,32 @@
 		.menu-button:hover {
             background-color: #357ABD;
         }
+		
+		/* Styles pour le formulaire et le bouton de suppression */
+		.delete-form {
+			position: absolute;
+			top: 10px;
+			right: 10px;
+		}
+
+		.delete-button {
+			background: none;
+			border: none;
+			font-size: 20px;
+			cursor: pointer;
+			color: #ff4d4d; /* Rouge par défaut */
+			transition: color 0.2s ease;
+		}
+
+		.delete-button:hover {
+			color: #e60000; /* Rouge intense au survol */
+		}
+
+		/* Position relative pour les éléments vidéo et musique */
+		.video-item, .music-item {
+			position: relative;
+		}
+
 
         /* Adaptation pour les petits écrans */
         @media (max-width: 768px) {
@@ -161,13 +187,18 @@
     <div id="music-container" class="container">
         {% for music in music_files %}
         <div class="music-item">
-            <img src="{{ music.thumbnail }}" alt="{{ music.name }}" class="thumbnail">
-            <div class="info">
-                <p><strong>{{ music.name }}</strong></p>
-                <p>{{ music.views }} écoutes</p>
-                <a href="{{ url_for('play_music', music=music.mp3_file) }}">Écouter</a>
-            </div>
-        </div>
+			<form action="{{ url_for('delete_media', media_type='music', name=music.name) }}" method="post" class="delete-form">
+				<button type="submit" class="delete-button" title="Supprimer">
+					🗑️
+				</button>
+			</form>
+			<img src="{{ music.thumbnail }}" alt="{{ music.name }}" class="thumbnail">
+			<div class="info">
+				<p><strong>{{ music.name }}</strong></p>
+				<p>{{ music.views }} écoutes</p>
+				<a href="{{ url_for('play_music', music=music.mp3_file) }}">Écouter</a>
+			</div>
+		</div>
         {% endfor %}
     </div>
 
@@ -175,6 +206,11 @@
     <div id="playlist-container" class="container">
         {% for playlist in playlists %}
         <div class="playlist-item">
+			<form action="{{ url_for('delete_media', media_type='music', name=playlist.name) }}" method="post" class="delete-form">
+				<button type="submit" class="delete-button" title="Supprimer">
+					🗑️
+				</button>
+			</form>
             <img src="{{ playlist.thumbnail }}" alt="{{ playlist.name }}" class="thumbnail">
             <div class="info">
                 <p><strong>{{ playlist.name }}</strong></p>
