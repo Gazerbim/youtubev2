@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ playlist }} - Playlist Musicale</title>
+    <style>
+        /* Styles généraux */
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            background-color: #f8f9fa;
+        }
+        h1, h2 {
+            color: #333;
+            text-align: center;
+        }
+        .player-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .current-track {
+            width: 100%;
+        }
+        .playlist {
+            width: 100%;
+            overflow-y: auto;
+            max-height: 400px;
+            margin-top: 20px;
+        }
+        .music-item {
+            display: flex;
+            align-items: center;
+            border: 1px solid #ddd;
+            margin-bottom: 10px;
+            padding: 10px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.2s;
+        }
+        .music-item:hover {
+            background-color: #f0f0f0;
+        }
+        .music-item img {
+            width: 50px;
+            height: 50px;
+            margin-right: 10px;
+            border-radius: 5px;
+        }
+        #audio-player {
+            width: 100%;
+            margin-top: 20px;
+            background-color: #000;
+            border-radius: 5px;
+        }
+        .download-button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+            text-align: center;
+            border-radius: 5px;
+        }
+        .download-button:hover {
+            background-color: #0056b3;
+        }
+
+        /* Style pour la musique active */
+        .active-track {
+            background-color: #d3d3d3; /* Gris clair pour la musique en cours */
+        }
+
+        /* Responsive styles */
+        @media (min-width: 768px) {
+            .player-container {
+                flex-direction: row;
+            }
+            .current-track {
+                flex: 2;
+            }
+            .playlist {
+                flex: 1;
+                max-height: 600px;
+            }
+        }
+        @media (max-width: 767px) {
+            .playlist {
+                max-height: 300px;
+            }
+            .music-item h3 {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Playlist : {{ playlist }}</h1>
+
+    <!-- Bouton pour télécharger toute la playlist -->
+    <button class="download-button" onclick="downloadPlaylist()">Télécharger toute la playlist</button>
+
+    <!-- Bouton pour activer le mode aléatoire -->
+    <button class="download-button" onclick="playShuffle()">Écouter en mode aléatoire</button>
+
+    <div class="player-container">
+        <div class="current-track">
+            <h2>En cours de lecture</h2>
+            <h3 id="current-title"></h3>
+            <audio id="audio-player" controls>
+                Votre navigateur ne supporte pas la lecture audio.
+            </audio>
+        </div>
+
+        <div class="playlist">
+            <h2>Liste des morceaux</h2>
+            {% for music in music_files %}
+            <div class="music-item" data-src="{{ url_for('serve_music', filename=music.mp3_file) }}" data-thumbnail="{{ url_for('serve_thumbnail', filename=music.name + '/thumbnail.jpg') }}">
+                <div>
+                    <h3>{{ music.name }}</h3>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <p><a href="{{ url_for('listen_music') }}">Retour à la liste des musiques</a></p>
+
+    <script>
+        const audioPlayer = document.getElementById('audio-player');
+        const currentTitle = document.getElementById('current-title');
+        const musicItems = document.querySelectorAll('.music-item');
+        let currentTrack = 0;
+        let isShuffleMode = {{ shuffle | tojson }};
+
+        function playTrack(index) {
+            if (index >= 0 && index < musicItems.length) {
+                const track = musicItems[index];
+                audioPlayer.src = track.dataset.src;
+                const trackTitle = track.querySelector('h3').textContent;
+                currentTitle.textContent = trackTitle;
+                document.title = trackTitle + " - Playlist Musicale";  // Met à jour le titre de la page
+                audioPlayer.play();
+                currentTrack = index;
+                
+                // Appliquer le style grisé à la musique active
+                highlightCurrentTrack();
+            }
+        }
+
+        function highlightCurrentTrack() {
+            musicItems.forEach((item, index) => {
+                if (index === currentTrack) {
+                    item.classList.add('active-track'); // Ajoute la classe à la musique active
+                } else {
+                    item.classList.remove('active-track'); // Retire la classe des autres musiques
+                }
+            });
+        }
+
+        musicItems.forEach((item, index) => {
+            item.addEventListener('click', () => {
+                playTrack(index);
+            });
+        });
+
+        audioPlayer.addEventListener('ended', () => {
+            if (currentTrack + 1 < musicItems.length) {
+                playTrack(currentTrack + 1);
+            } else {
+                console.log("Fin de la playlist");
+            }
+        });
+
+        if (musicItems.length > 0) {
+            playTrack(0);  // Joue le premier morceau de la liste
+            highlightCurrentTrack();  // Applique le style à la première musique
+        }
+
+        // Fonction pour jouer la playlist en mode aléatoire
+        function playShuffle() {
+            window.location.href = "{{ url_for('play_music_playlist', playlist=playlist, shuffle=True) }}";
+        }
+
+        // Fonction pour télécharger toute la playlist
+        function downloadPlaylist() {
+            alert("Le téléchargement a commencé ! Veuillez RESTER SUR LA PAGE sinon vous ne l'aurez pas !");
+            window.location.href = "{{ url_for('download_music_playlist_all', playlist=playlist) }}";
+        }
+    </script>
+</body>
+</html>
